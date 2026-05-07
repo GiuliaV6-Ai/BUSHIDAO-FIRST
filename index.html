@@ -1,0 +1,292 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap { font-family: var(--font-sans); padding: 1rem 0 2.5rem; }
+.tabs { display: flex; gap: 5px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab { padding: 6px 13px; font-size: 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); cursor: pointer; color: var(--color-text-secondary); background: transparent; transition: all 0.15s; white-space: nowrap; }
+.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
+.panel { display: none; }
+.panel.active { display: block; }
+.section-label { font-size: 11px; color: var(--color-text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.75; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); border: 0.5px solid; white-space: nowrap; }
+.badge-now { background: var(--color-background-danger); color: var(--color-text-danger); border-color: var(--color-border-danger); }
+.badge-next { background: var(--color-background-warning); color: var(--color-text-warning); border-color: var(--color-border-warning); }
+.badge-future { background: var(--color-background-secondary); color: var(--color-text-secondary); border-color: var(--color-border-secondary); }
+.badge-open { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.badge-ok { background: var(--color-background-success); color: var(--color-text-success); border-color: var(--color-border-success); }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.25rem 0; }
+.action-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 7px; cursor: pointer; background: var(--color-background-primary); transition: background 0.12s; }
+.action-item:hover { background: var(--color-background-secondary); }
+.action-item.done { opacity: 0.4; }
+.chk { width: 16px; height: 16px; border: 0.5px solid var(--color-border-secondary); border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.chk.on { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+.action-main { font-size: 13px; color: var(--color-text-primary); line-height: 1.55; }
+.action-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.role-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; background: var(--color-background-primary); }
+.role-rank { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.role-name { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin: 2px 0; }
+.role-vote { font-size: 11px; color: var(--color-text-tertiary); }
+.vote-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
+.vote-yes { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); }
+.vote-no { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.option-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; background: var(--color-background-primary); }
+.option-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 5px; }
+.option-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+.talent-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.talent-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.talent-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.talent-role { font-size: 11px; color: var(--color-text-tertiary); }
+.progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.prog-bar { flex: 1; height: 3px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--color-text-success); border-radius: 2px; }
+.prog-label { font-size: 11px; color: var(--color-text-secondary); min-width: 40px; text-align: right; }
+</style>
+
+<h2 class="sr-only">BushiDAO マスターボード — 5つの議題整理</h2>
+<div class="wrap">
+
+<div class="tabs">
+  <button class="tab active" onclick="sw('reward')">① 還元システム</button>
+  <button class="tab" onclick="sw('role')">② ロール設計</button>
+  <button class="tab" onclick="sw('chara')">③ キャラ戦略</button>
+  <button class="tab" onclick="sw('action')">④⑤ アクション</button>
+</div>
+
+<div class="panel active" id="panel-reward">
+  <div class="section-label">功績ポイント → NFT / SBT 還元フロー</div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-now">今すぐ</span> フェーズ1 — 手動運用</div>
+    <div class="card-body">
+      Discordアクティビティ（投稿・制作・布教・ブレスト参加等）を<br>
+      管理者が目視で集計 → スプレッドシートで功績ポイント管理<br>
+      <br>
+      一定基準に達したら手動でNFT / SBTを付与。<br>
+      <strong style="font-weight:500">「賞状」的な証</strong> — 段位・貢献記録として永続。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-next">次フェーズ</span> フェーズ2 — 半自動化</div>
+    <div class="card-body">
+      MEE6 / Carl-bot 等のDiscordボットで活動量を自動集計<br>
+      → 閾値到達で通知 → 管理者が承認してミント<br>
+      <br>
+      人間の判断を残しながら、集計作業だけ自動化。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-future">将来</span> フェーズ3 — スマートコントラクト</div>
+    <div class="card-body">
+      オンチェーン活動データ連携 → 自動ミント<br>
+      ガバナンストークンと功績SBTを連動<br>
+      <br>
+      新しいDAOの完成形を世界に示すフェーズ。
+    </div>
+  </div>
+
+  <div style="margin-top: 4px;">
+    <button onclick="sendPrompt('BushiDAOの功績ポイント基準と獲得条件を具体的に設計したい')">ポイント基準を設計する ↗</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-role">
+  <div class="section-label">段位ロール — 称号・投票権の設計案</div>
+
+  <div class="role-grid">
+    <div class="role-card">
+      <div class="role-rank">無級</div>
+      <div class="role-name">入門者</div>
+      <div class="role-vote"><span class="vote-dot vote-no"></span>投票権なし</div>
+    </div>
+    <div class="role-card">
+      <div class="role-rank">初段</div>
+      <div class="role-name">侍</div>
+      <div class="role-vote"><span class="vote-dot vote-yes"></span>基本投票権 ×1</div>
+    </div>
+    <div class="role-card">
+      <div class="role-rank">三段</div>
+      <div class="role-name">武将</div>
+      <div class="role-vote"><span class="vote-dot vote-yes"></span>投票権 ×2</div>
+    </div>
+    <div class="role-card">
+      <div class="role-rank">五段</div>
+      <div class="role-name">大将</div>
+      <div class="role-vote"><span class="vote-dot vote-yes"></span>投票権 ×3</div>
+    </div>
+    <div class="role-card">
+      <div class="role-rank">師範</div>
+      <div class="role-name">宗家</div>
+      <div class="role-vote"><span class="vote-dot vote-yes"></span>拒否権あり</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">「自慢できる」ロール設計のポイント</div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-medal" aria-hidden="true" style="font-size:16px"></i> 称号は「物語」にする</div>
+    <div class="card-body">
+      単なる番号より、武士道の世界観に根ざした名前が誇りになる。<br>
+      段位NFT / SBTはプロフィール画像に飾れる形にする。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-key" aria-hidden="true" style="font-size:16px"></i> 投票権は「影響力」に変換する</div>
+    <div class="card-body">
+      キャラクター追加・世界観設定・資金配分など<br>
+      「DAOの方向性を決める」議題に段位が効く仕組みが自慢になる。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-door-enter" aria-hidden="true" style="font-size:16px"></i> 段位限定アクセスで希少性を演出</div>
+    <div class="card-body">
+      三段以上限定チャンネル、師範限定ボイスなど<br>
+      「そこに呼ばれた」という体験が価値になる。
+    </div>
+  </div>
+
+  <div style="margin-top: 4px;">
+    <button onclick="sendPrompt('BushiDAOのロール称号と特典を詳細に設計したい')">称号・特典を詳細設計する ↗</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-chara">
+  <div class="section-label">キャラクター戦略 — 2つの道</div>
+
+  <div class="two-col">
+    <div class="option-card" style="border: 2px solid var(--color-border-info);">
+      <div style="margin-bottom: 6px;"><span class="badge badge-open">推奨A</span></div>
+      <div class="option-title">メイン1体 + ジェネラティブ</div>
+      <div class="option-body">
+        サイバー坊主を「原典」として磨き込む。<br>
+        その後、属性・装備・段位を変数にしてジェネラティブ展開。<br>
+        <br>
+        参加者が「自分のサイバー坊主」を持てる体験が生まれる。後発でも入りやすい。
+      </div>
+    </div>
+    <div class="option-card">
+      <div style="margin-bottom: 6px;"><span class="badge badge-next">選択肢B</span></div>
+      <div class="option-title">初期5体の個性キャラ</div>
+      <div class="option-body">
+        CryptoNinja方式。それぞれ役割・属性が違う初期メンバー。<br>
+        <br>
+        世界観の厚みは出るが、制作コストが高い。<br>
+        クオリティ維持が難しくなるリスクあり。
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">現時点での整理</div>
+    <div class="card-body">
+      ジュリアさんが磨いているサイバー坊主（BO-ボウ）を「完成形の原典」にする。<br>
+      まず1体を本気で仕上げてから、展開戦略をコミュニティで決める。<br>
+      <br>
+      <span style="color:var(--color-text-tertiary);font-size:12px">※ 追加キャラは「宗家・師範クラスの実績者」が提案できる仕組みにすると世界観との整合が保てる</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 4px;">
+    <button onclick="sendPrompt('BushiDAOのキャラクター展開ロードマップを設計したい')">キャラロードマップを作る ↗</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-action">
+  <div class="section-label">アクションアイテム — 今すぐ動けるもの</div>
+
+  <div class="progress-row">
+    <div class="prog-bar"><div class="prog-fill" id="ap" style="width:0%"></div></div>
+    <div class="prog-label" id="al">0 / 9</div>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;padding-left:2px">制作・コンテンツ</div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">サイバー坊主（BO-ボウ）の完成版を制作</div>
+      <div class="action-sub">担当: ジュリアさん　期限: 次回ブレスト前</div></div>
+    </div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">BushiDAO 創世記 ver.0.1 を Discord に固定投稿</div>
+      <div class="action-sub">担当: 運営　#創世記・ルール チャンネルに貼る</div></div>
+    </div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">発信用記事の初稿を執筆（世界観 + DAOの存在意義）</div>
+      <div class="action-sub">担当: 文章得意なメンバー or 暗号太郎</div></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;padding-left:2px">仕組み・設計</div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">功績ポイント基準表を作成（何をしたら何ポイントか）</div>
+      <div class="action-sub">担当: 設計担当　スプレッドシートで管理開始</div></div>
+    </div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">段位ロール称号・特典の最終案をDiscordで議決</div>
+      <div class="action-sub">このボードをブレスト議題として提示</div></div>
+    </div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">キャラ戦略（A案 or B案）をコミュニティ投票で決定</div>
+      <div class="action-sub">Discordの投票機能 or スレッドで合意形成</div></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;padding-left:2px">人材・体制</div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">現メンバーのスキルを #自己紹介 で把握・整理</div>
+      <div class="action-sub">絵 / 文章 / エンジニア / SNS / Web3知識 をマッピング</div></div>
+    </div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">足りないスキルを特定 → 内部割り振り or 公募を判断</div>
+      <div class="action-sub">担当: アクション係　次回ブレストで発表</div></div>
+    </div>
+    <div class="action-item" onclick="tog(this)">
+      <div class="chk"></div>
+      <div><div class="action-main">「アクション係」を1名立てて報告フローを確立</div>
+      <div class="action-sub">進捗を週1でDiscordに投稿する担当者を決める</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top: 4px;">
+    <button onclick="sendPrompt('BushiDAOに今必要な人材とロール分担を詳しく整理したい')">人材マップを作る ↗</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+function sw(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+const total = 9;
+function tog(el) {
+  el.classList.toggle('done');
+  const c = el.querySelector('.chk');
+  c.classList.toggle('on');
+  c.textContent = c.classList.contains('on') ? '✓' : '';
+  const done = document.querySelectorAll('#panel-action .action-item.done').length;
+  document.getElementById('ap').style.width = Math.round(done / total * 100) + '%';
+  document.getElementById('al').textContent = done + ' / ' + total;
+}
+</script>

@@ -1,292 +1,1012 @@
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BushiDAO — 武士道の新時代</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-.wrap { font-family: var(--font-sans); padding: 1rem 0 2.5rem; }
-.tabs { display: flex; gap: 5px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.tab { padding: 6px 13px; font-size: 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); cursor: pointer; color: var(--color-text-secondary); background: transparent; transition: all 0.15s; white-space: nowrap; }
-.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
-.panel { display: none; }
-.panel.active { display: block; }
-.section-label { font-size: 11px; color: var(--color-text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
-.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
-.card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-.card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.75; }
-.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); border: 0.5px solid; white-space: nowrap; }
-.badge-now { background: var(--color-background-danger); color: var(--color-text-danger); border-color: var(--color-border-danger); }
-.badge-next { background: var(--color-background-warning); color: var(--color-text-warning); border-color: var(--color-border-warning); }
-.badge-future { background: var(--color-background-secondary); color: var(--color-text-secondary); border-color: var(--color-border-secondary); }
-.badge-open { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
-.badge-ok { background: var(--color-background-success); color: var(--color-text-success); border-color: var(--color-border-success); }
-.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.25rem 0; }
-.action-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 7px; cursor: pointer; background: var(--color-background-primary); transition: background 0.12s; }
-.action-item:hover { background: var(--color-background-secondary); }
-.action-item.done { opacity: 0.4; }
-.chk { width: 16px; height: 16px; border: 0.5px solid var(--color-border-secondary); border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
-.chk.on { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
-.action-main { font-size: 13px; color: var(--color-text-primary); line-height: 1.55; }
-.action-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
-.role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px; }
-.role-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; background: var(--color-background-primary); }
-.role-rank { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
-.role-name { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin: 2px 0; }
-.role-vote { font-size: 11px; color: var(--color-text-tertiary); }
-.vote-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
-.vote-yes { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); }
-.vote-no { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-.option-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; background: var(--color-background-primary); }
-.option-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 5px; }
-.option-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
-.talent-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
-.talent-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-.talent-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
-.talent-role { font-size: 11px; color: var(--color-text-tertiary); }
-.progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.prog-bar { flex: 1; height: 3px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; }
-.prog-fill { height: 100%; background: var(--color-text-success); border-radius: 2px; }
-.prog-label { font-size: 11px; color: var(--color-text-secondary); min-width: 40px; text-align: right; }
+:root {
+  --ink: #0a0a0f;
+  --paper: #f5f0e8;
+  --gold: #c8a84b;
+  --gold-dim: #8a6f2e;
+  --red: #8b1a1a;
+  --red-bright: #c0392b;
+  --cyan: #00d4d4;
+  --cyan-dim: #006666;
+  --white: #e8e0d0;
+  --muted: #6b6560;
+  --border: rgba(200,168,75,0.25);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--white);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── noise texture overlay ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:0.6;
+}
+
+/* ── scanline ── */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── HERO ── */
+.hero {
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding: 4rem 2rem;
+  overflow:hidden;
+  z-index:1;
+}
+
+.hero-bg {
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 60%, rgba(139,26,26,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 50% 40%, rgba(0,212,212,0.04) 0%, transparent 60%);
+  z-index:0;
+}
+
+/* vertical line decorations */
+.hero::before {
+  content:'';
+  position:absolute;
+  left:50%;
+  top:0;
+  width:1px;
+  height:100%;
+  background: linear-gradient(to bottom, transparent, var(--gold-dim) 30%, var(--gold-dim) 70%, transparent);
+  opacity:0.3;
+  z-index:0;
+}
+
+.kamon {
+  position:relative;
+  z-index:1;
+  margin-bottom: 2rem;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.hero-title {
+  position:relative;
+  z-index:1;
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-shadow: 0 0 40px rgba(200,168,75,0.3);
+  line-height:1;
+  margin-bottom: 0.5rem;
+}
+
+.hero-sub {
+  position:relative;
+  z-index:1;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity:0.8;
+}
+
+.hero-tagline {
+  position:relative;
+  z-index:1;
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: var(--white);
+  opacity:0.7;
+  letter-spacing:0.1em;
+  line-height:1.9;
+  max-width:480px;
+}
+
+.hero-ver {
+  position:relative;
+  z-index:1;
+  margin-top:3rem;
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.65rem;
+  letter-spacing:0.3em;
+  color:var(--muted);
+}
+
+.scroll-hint {
+  position:absolute;
+  bottom:2rem;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  color:var(--muted);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+.scroll-hint svg { opacity:0.5; }
+
+/* ── NAV ── */
+nav {
+  position:sticky;
+  top:0;
+  z-index:100;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:52px;
+}
+
+.nav-logo {
+  font-family:'Noto Serif JP', serif;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:0.1em;
+}
+
+.nav-links {
+  display:flex;
+  gap:0;
+  list-style:none;
+}
+
+.nav-links a {
+  display:block;
+  padding: 0 1rem;
+  font-size:0.75rem;
+  letter-spacing:0.15em;
+  color:var(--muted);
+  text-decoration:none;
+  transition:color 0.2s;
+  line-height:52px;
+}
+
+.nav-links a:hover { color:var(--gold); }
+
+/* ── SECTION ── */
+section {
+  position:relative;
+  z-index:1;
+  padding: 5rem 2rem;
+  max-width:900px;
+  margin:0 auto;
+}
+
+.section-eyebrow {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.65rem;
+  letter-spacing:0.4em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+  opacity:0.8;
+}
+
+.section-title {
+  font-family:'Noto Serif JP', serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight:700;
+  color:var(--gold);
+  margin-bottom:2rem;
+  letter-spacing:0.05em;
+  position:relative;
+  padding-bottom:1rem;
+}
+
+.section-title::after {
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:48px;
+  height:1px;
+  background:var(--gold);
+  opacity:0.5;
+}
+
+/* ── GENESIS ── */
+.genesis-text {
+  font-size:1rem;
+  line-height:2;
+  color:rgba(232,224,208,0.8);
+  max-width:640px;
+  margin-bottom:2.5rem;
+}
+
+.meta-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px,1fr));
+  gap:1px;
+  border:1px solid var(--border);
+  margin-bottom:3rem;
+}
+
+.meta-cell {
+  padding:1.25rem 1.5rem;
+  border:1px solid var(--border);
+  background:rgba(200,168,75,0.03);
+  transition:background 0.2s;
+}
+
+.meta-cell:hover { background:rgba(200,168,75,0.07); }
+
+.meta-label {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.6rem;
+  letter-spacing:0.3em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:0.5rem;
+  opacity:0.7;
+}
+
+.meta-value {
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--white);
+  line-height:1.5;
+}
+
+/* ── REWARD ── */
+.phase-list { display:flex; flex-direction:column; gap:1px; }
+
+.phase {
+  display:grid;
+  grid-template-columns:80px 1fr;
+  gap:0;
+  border:1px solid var(--border);
+  background:rgba(200,168,75,0.02);
+  transition:background 0.2s;
+  overflow:hidden;
+}
+
+.phase:hover { background:rgba(200,168,75,0.06); }
+
+.phase-tag {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1.5rem 1rem;
+  border-right:1px solid var(--border);
+  text-align:center;
+}
+
+.phase-tag span {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.6rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  writing-mode:vertical-rl;
+}
+
+.tag-now span { color:var(--red-bright); }
+.tag-next span { color:var(--gold); }
+.tag-future span { color:var(--cyan); }
+
+.phase-content { padding:1.5rem 2rem; }
+
+.phase-title {
+  font-family:'Noto Serif JP', serif;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--white);
+  margin-bottom:0.5rem;
+}
+
+.phase-body {
+  font-size:0.85rem;
+  line-height:1.85;
+  color:rgba(232,224,208,0.65);
+}
+
+/* ── ROLES ── */
+.roles-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+  gap:1px;
+  border:1px solid var(--border);
+  margin-bottom:2.5rem;
+}
+
+.role-card {
+  padding:1.5rem 1.25rem;
+  border:1px solid var(--border);
+  background:rgba(200,168,75,0.02);
+  text-align:center;
+  transition:all 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.role-card:hover {
+  background:rgba(200,168,75,0.08);
+  transform:translateY(-2px);
+}
+
+.role-card.special {
+  background:rgba(200,168,75,0.06);
+}
+
+.role-rank {
+  font-family:'Noto Serif JP', serif;
+  font-size:1.8rem;
+  font-weight:900;
+  color:var(--gold);
+  line-height:1;
+  margin-bottom:0.4rem;
+}
+
+.role-name {
+  font-size:0.8rem;
+  font-weight:500;
+  color:var(--white);
+  letter-spacing:0.1em;
+  margin-bottom:0.5rem;
+}
+
+.role-vote {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.62rem;
+  letter-spacing:0.05em;
+}
+
+.vote-active { color:var(--cyan); }
+.vote-none { color:var(--muted); }
+
+.role-bar {
+  position:absolute;
+  bottom:0;
+  left:0;
+  height:2px;
+  background:var(--gold);
+  opacity:0.4;
+  transition:opacity 0.2s;
+}
+
+.role-card:hover .role-bar { opacity:0.8; }
+
+.features-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+  gap:1px;
+  border:1px solid var(--border);
+}
+
+.feature-card {
+  padding:1.5rem;
+  border:1px solid var(--border);
+  background:rgba(0,212,212,0.02);
+}
+
+.feature-title {
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--cyan);
+  margin-bottom:0.5rem;
+}
+
+.feature-body {
+  font-size:0.8rem;
+  line-height:1.8;
+  color:rgba(232,224,208,0.6);
+}
+
+/* ── CHARACTER ── */
+.char-options {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  border:1px solid var(--border);
+  margin-bottom:2rem;
+}
+
+.char-option {
+  padding:2rem 1.75rem;
+  border:1px solid var(--border);
+  background:rgba(200,168,75,0.02);
+  transition:background 0.2s;
+}
+
+.char-option.recommended {
+  background:rgba(200,168,75,0.06);
+  border-color:rgba(200,168,75,0.4);
+}
+
+.char-option:hover { background:rgba(200,168,75,0.08); }
+
+.char-badge {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.6rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+}
+
+.badge-rec { color:var(--gold); }
+.badge-alt { color:var(--muted); }
+
+.char-title {
+  font-family:'Noto Serif JP', serif;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--white);
+  margin-bottom:0.75rem;
+}
+
+.char-body {
+  font-size:0.8rem;
+  line-height:1.85;
+  color:rgba(232,224,208,0.6);
+}
+
+.char-note {
+  padding:1.5rem 2rem;
+  border:1px solid var(--border);
+  background:rgba(200,168,75,0.03);
+  font-size:0.82rem;
+  line-height:1.85;
+  color:rgba(232,224,208,0.7);
+}
+
+.char-note strong { color:var(--gold); font-weight:500; }
+
+/* ── ACTIONS ── */
+.action-section { margin-bottom:2.5rem; }
+
+.action-section-label {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.62rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:0.75rem;
+  padding-bottom:0.5rem;
+  border-bottom:1px solid var(--border);
+}
+
+.action-item {
+  display:flex;
+  gap:1rem;
+  align-items:flex-start;
+  padding:1rem 1.25rem;
+  border:1px solid var(--border);
+  border-top:none;
+  background:rgba(200,168,75,0.02);
+  cursor:pointer;
+  transition:background 0.15s;
+}
+
+.action-item:first-of-type { border-top:1px solid var(--border); }
+.action-item:hover { background:rgba(200,168,75,0.06); }
+
+.action-item.done { opacity:0.35; }
+
+.chk {
+  width:16px;
+  height:16px;
+  border:1px solid var(--gold-dim);
+  flex-shrink:0;
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  color:var(--gold);
+  transition:background 0.15s;
+}
+
+.chk.on { background:rgba(200,168,75,0.2); }
+
+.action-main {
+  font-size:0.85rem;
+  color:var(--white);
+  line-height:1.5;
+}
+
+.action-sub {
+  font-size:0.72rem;
+  color:var(--muted);
+  margin-top:3px;
+  font-family:'Share Tech Mono', monospace;
+  letter-spacing:0.05em;
+}
+
+.progress-bar-wrap {
+  height:2px;
+  background:rgba(200,168,75,0.1);
+  margin-bottom:2.5rem;
+  position:relative;
+}
+
+.progress-bar-fill {
+  height:100%;
+  background:var(--gold);
+  transition:width 0.3s ease;
+}
+
+.progress-label {
+  position:absolute;
+  right:0;
+  top:-1.4rem;
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.65rem;
+  color:var(--gold-dim);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  max-width:900px;
+  margin:0 auto;
+  border:none;
+  border-top:1px solid var(--border);
+  position:relative;
+  z-index:1;
+}
+
+/* ── FOOTER ── */
+footer {
+  position:relative;
+  z-index:1;
+  text-align:center;
+  padding:4rem 2rem 3rem;
+  border-top:1px solid var(--border);
+}
+
+.footer-kamon { margin-bottom:1.5rem; opacity:0.4; }
+
+.footer-motto {
+  font-family:'Noto Serif JP', serif;
+  font-size:1.1rem;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:0.2em;
+  margin-bottom:0.75rem;
+  opacity:0.7;
+}
+
+.footer-cc0 {
+  font-family:'Share Tech Mono', monospace;
+  font-size:0.62rem;
+  letter-spacing:0.25em;
+  color:var(--muted);
+}
+
+/* ── ANIMATIONS ── */
+.reveal {
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity:1;
+  transform:translateY(0);
+}
+
+@media (max-width:600px) {
+  .char-options { grid-template-columns:1fr; }
+  .nav-links { display:none; }
+  .phase { grid-template-columns:60px 1fr; }
+}
 </style>
+</head>
+<body>
 
-<h2 class="sr-only">BushiDAO マスターボード — 5つの議題整理</h2>
-<div class="wrap">
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
 
-<div class="tabs">
-  <button class="tab active" onclick="sw('reward')">① 還元システム</button>
-  <button class="tab" onclick="sw('role')">② ロール設計</button>
-  <button class="tab" onclick="sw('chara')">③ キャラ戦略</button>
-  <button class="tab" onclick="sw('action')">④⑤ アクション</button>
-</div>
-
-<div class="panel active" id="panel-reward">
-  <div class="section-label">功績ポイント → NFT / SBT 還元フロー</div>
-
-  <div class="card">
-    <div class="card-title"><span class="badge badge-now">今すぐ</span> フェーズ1 — 手動運用</div>
-    <div class="card-body">
-      Discordアクティビティ（投稿・制作・布教・ブレスト参加等）を<br>
-      管理者が目視で集計 → スプレッドシートで功績ポイント管理<br>
-      <br>
-      一定基準に達したら手動でNFT / SBTを付与。<br>
-      <strong style="font-weight:500">「賞状」的な証</strong> — 段位・貢献記録として永続。
-    </div>
+  <div class="kamon">
+    <svg width="90" height="90" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="45" cy="45" r="42" fill="none" stroke="#c8a84b" stroke-width="1"/>
+      <circle cx="45" cy="45" r="34" fill="none" stroke="#c8a84b" stroke-width="0.5" stroke-dasharray="3,4"/>
+      <polygon points="45,10 52,30 75,30 58,44 64,68 45,54 26,68 32,44 15,30 38,30"
+               fill="none" stroke="#c8a84b" stroke-width="1.2" stroke-linejoin="round"/>
+      <circle cx="45" cy="45" r="7" fill="none" stroke="#c8a84b" stroke-width="1"/>
+      <circle cx="45" cy="45" r="2.5" fill="#c8a84b"/>
+    </svg>
   </div>
 
-  <div class="card">
-    <div class="card-title"><span class="badge badge-next">次フェーズ</span> フェーズ2 — 半自動化</div>
-    <div class="card-body">
-      MEE6 / Carl-bot 等のDiscordボットで活動量を自動集計<br>
-      → 閾値到達で通知 → 管理者が承認してミント<br>
-      <br>
-      人間の判断を残しながら、集計作業だけ自動化。
-    </div>
-  </div>
+  <div class="hero-sub">Bushido × Web3 × Community</div>
+  <h1 class="hero-title">BushiDAO</h1>
+  <p class="hero-tagline">
+    礼・義・仁・誠——<br>
+    古の武士が命をかけて守った価値観を、<br>
+    デジタルの刀で刻み直す。
+  </p>
+  <div class="hero-ver">Genesis Scroll — ver. 0.1</div>
 
-  <div class="card">
-    <div class="card-title"><span class="badge badge-future">将来</span> フェーズ3 — スマートコントラクト</div>
-    <div class="card-body">
-      オンチェーン活動データ連携 → 自動ミント<br>
-      ガバナンストークンと功績SBTを連動<br>
-      <br>
-      新しいDAOの完成形を世界に示すフェーズ。
-    </div>
-  </div>
-
-  <div style="margin-top: 4px;">
-    <button onclick="sendPrompt('BushiDAOの功績ポイント基準と獲得条件を具体的に設計したい')">ポイント基準を設計する ↗</button>
+  <div class="scroll-hint">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+    scroll
   </div>
 </div>
 
-<div class="panel" id="panel-role">
-  <div class="section-label">段位ロール — 称号・投票権の設計案</div>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">⚔ BushiDAO</div>
+  <ul class="nav-links">
+    <li><a href="#genesis">創世記</a></li>
+    <li><a href="#reward">還元</a></li>
+    <li><a href="#roles">段位</a></li>
+    <li><a href="#character">キャラ</a></li>
+    <li><a href="#action">アクション</a></li>
+  </ul>
+</nav>
 
-  <div class="role-grid">
-    <div class="role-card">
-      <div class="role-rank">無級</div>
-      <div class="role-name">入門者</div>
-      <div class="role-vote"><span class="vote-dot vote-no"></span>投票権なし</div>
-    </div>
-    <div class="role-card">
-      <div class="role-rank">初段</div>
-      <div class="role-name">侍</div>
-      <div class="role-vote"><span class="vote-dot vote-yes"></span>基本投票権 ×1</div>
-    </div>
-    <div class="role-card">
-      <div class="role-rank">三段</div>
-      <div class="role-name">武将</div>
-      <div class="role-vote"><span class="vote-dot vote-yes"></span>投票権 ×2</div>
-    </div>
-    <div class="role-card">
-      <div class="role-rank">五段</div>
-      <div class="role-name">大将</div>
-      <div class="role-vote"><span class="vote-dot vote-yes"></span>投票権 ×3</div>
-    </div>
-    <div class="role-card">
-      <div class="role-rank">師範</div>
-      <div class="role-name">宗家</div>
-      <div class="role-vote"><span class="vote-dot vote-yes"></span>拒否権あり</div>
-    </div>
+<!-- GENESIS -->
+<section id="genesis">
+  <div class="reveal">
+    <div class="section-eyebrow">01 — Genesis</div>
+    <h2 class="section-title">BushiDAOとは何か</h2>
   </div>
-
-  <div class="divider"></div>
-  <div class="section-label">「自慢できる」ロール設計のポイント</div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-medal" aria-hidden="true" style="font-size:16px"></i> 称号は「物語」にする</div>
-    <div class="card-body">
-      単なる番号より、武士道の世界観に根ざした名前が誇りになる。<br>
-      段位NFT / SBTはプロフィール画像に飾れる形にする。
-    </div>
+  <div class="reveal">
+    <p class="genesis-text">
+      武士道の精神をWeb3の時代に再解釈した、オープンなクリエイター・コミュニティDAO。<br>
+      参加者は「道（DAO）」を歩む者として、貢献によって功績を積み、共に世界観を創り上げていく。<br>
+      日本昔ばなしの語り口と歴史武士道哲学を軸に、誰も見たことのないDAOの形を世界に示す。
+    </p>
   </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-key" aria-hidden="true" style="font-size:16px"></i> 投票権は「影響力」に変換する</div>
-    <div class="card-body">
-      キャラクター追加・世界観設定・資金配分など<br>
-      「DAOの方向性を決める」議題に段位が効く仕組みが自慢になる。
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><i class="ti ti-door-enter" aria-hidden="true" style="font-size:16px"></i> 段位限定アクセスで希少性を演出</div>
-    <div class="card-body">
-      三段以上限定チャンネル、師範限定ボイスなど<br>
-      「そこに呼ばれた」という体験が価値になる。
-    </div>
-  </div>
-
-  <div style="margin-top: 4px;">
-    <button onclick="sendPrompt('BushiDAOのロール称号と特典を詳細に設計したい')">称号・特典を詳細設計する ↗</button>
-  </div>
-</div>
-
-<div class="panel" id="panel-chara">
-  <div class="section-label">キャラクター戦略 — 2つの道</div>
-
-  <div class="two-col">
-    <div class="option-card" style="border: 2px solid var(--color-border-info);">
-      <div style="margin-bottom: 6px;"><span class="badge badge-open">推奨A</span></div>
-      <div class="option-title">メイン1体 + ジェネラティブ</div>
-      <div class="option-body">
-        サイバー坊主を「原典」として磨き込む。<br>
-        その後、属性・装備・段位を変数にしてジェネラティブ展開。<br>
-        <br>
-        参加者が「自分のサイバー坊主」を持てる体験が生まれる。後発でも入りやすい。
+  <div class="reveal">
+    <div class="meta-grid">
+      <div class="meta-cell">
+        <div class="meta-label">DAO名</div>
+        <div class="meta-value">BushiDAO（武士道）</div>
       </div>
-    </div>
-    <div class="option-card">
-      <div style="margin-bottom: 6px;"><span class="badge badge-next">選択肢B</span></div>
-      <div class="option-title">初期5体の個性キャラ</div>
-      <div class="option-body">
-        CryptoNinja方式。それぞれ役割・属性が違う初期メンバー。<br>
-        <br>
-        世界観の厚みは出るが、制作コストが高い。<br>
-        クオリティ維持が難しくなるリスクあり。
+      <div class="meta-cell">
+        <div class="meta-label">メインキャラ</div>
+        <div class="meta-value">サイバー坊主 BO-ボウ（制作中）</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">ライセンス</div>
+        <div class="meta-value">CC0 — 商用利用含む完全自由</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">コンセプト</div>
+        <div class="meta-value">禅 × サイバーパンク × DAO</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">コミュニティ</div>
+        <div class="meta-value">Discord — 創世メンバー招集済</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">フェーズ</div>
+        <div class="meta-value">創世記 ver.0.1 進行中</div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="card">
-    <div class="card-title">現時点での整理</div>
-    <div class="card-body">
-      ジュリアさんが磨いているサイバー坊主（BO-ボウ）を「完成形の原典」にする。<br>
-      まず1体を本気で仕上げてから、展開戦略をコミュニティで決める。<br>
-      <br>
-      <span style="color:var(--color-text-tertiary);font-size:12px">※ 追加キャラは「宗家・師範クラスの実績者」が提案できる仕組みにすると世界観との整合が保てる</span>
+<hr class="divider">
+
+<!-- REWARD -->
+<section id="reward">
+  <div class="reveal">
+    <div class="section-eyebrow">02 — Reward System</div>
+    <h2 class="section-title">功績還元システム</h2>
+  </div>
+  <div class="reveal">
+    <div class="phase-list">
+      <div class="phase">
+        <div class="phase-tag tag-now"><span>今すぐ</span></div>
+        <div class="phase-content">
+          <div class="phase-title">フェーズ1 — 手動運用・人間の温かさで</div>
+          <div class="phase-body">
+            Discordアクティビティ（投稿・制作・布教・ブレスト参加等）を管理者が目視で集計。
+            スプレッドシートで功績ポイントを管理し、一定基準に達したら手動でNFT / SBTを付与。
+            「賞状」的な証として段位・貢献記録が永続する。手動だからこそ人間らしい還元が生まれる。
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-tag tag-next"><span>次フェーズ</span></div>
+        <div class="phase-content">
+          <div class="phase-title">フェーズ2 — 半自動化</div>
+          <div class="phase-body">
+            MEE6 / Carl-bot 等のDiscordボットで活動量を自動集計。
+            閾値到達で通知 → 管理者が承認してミント。
+            人間の判断を残しながら、集計作業だけ自動化する中間形態。
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-tag tag-future"><span>将来</span></div>
+        <div class="phase-content">
+          <div class="phase-title">フェーズ3 — スマートコントラクト完全自動化</div>
+          <div class="phase-body">
+            オンチェーン活動データ連携 → 自動ミント。
+            ガバナンストークンと功績SBTを連動させ、新しいDAOの完成形を世界に示すフェーズ。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ROLES -->
+<section id="roles">
+  <div class="reveal">
+    <div class="section-eyebrow">03 — Rank System</div>
+    <h2 class="section-title">段位制ロール「功績の道」</h2>
+  </div>
+  <div class="reveal">
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-rank">無級</div>
+        <div class="role-name">入門者</div>
+        <div class="role-vote vote-none">投票権なし</div>
+        <div class="role-bar" style="width:10%"></div>
+      </div>
+      <div class="role-card">
+        <div class="role-rank">初段</div>
+        <div class="role-name">侍</div>
+        <div class="role-vote vote-active">投票権 ×1</div>
+        <div class="role-bar" style="width:30%"></div>
+      </div>
+      <div class="role-card">
+        <div class="role-rank">三段</div>
+        <div class="role-name">武将</div>
+        <div class="role-vote vote-active">投票権 ×2</div>
+        <div class="role-bar" style="width:60%"></div>
+      </div>
+      <div class="role-card">
+        <div class="role-rank">五段</div>
+        <div class="role-name">大将</div>
+        <div class="role-vote vote-active">投票権 ×3</div>
+        <div class="role-bar" style="width:80%"></div>
+      </div>
+      <div class="role-card special">
+        <div class="role-rank">師範</div>
+        <div class="role-name">宗家</div>
+        <div class="role-vote vote-active">拒否権あり</div>
+        <div class="role-bar" style="width:100%"></div>
+      </div>
+      <div class="role-card">
+        <div class="role-rank" style="font-size:1.1rem;padding-top:0.3rem">眠り刀</div>
+        <div class="role-name">休眠状態</div>
+        <div class="role-vote vote-none">復帰で再起可</div>
+        <div class="role-bar" style="width:0%;background:var(--muted)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-title">称号は「物語」にする</div>
+        <div class="feature-body">単なる番号より、武士道の世界観に根ざした名前が誇りになる。段位NFT / SBTはプロフィール画像に飾れる形にする。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-title">投票権は「影響力」に変換する</div>
+        <div class="feature-body">キャラクター追加・世界観設定・資金配分などDAOの方向性を決める議題に段位が効く仕組みが自慢になる。</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-title">段位限定アクセスで希少性を演出</div>
+        <div class="feature-body">三段以上限定チャンネル、師範限定ボイスなど「そこに呼ばれた」という体験が価値になる。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CHARACTER -->
+<section id="character">
+  <div class="reveal">
+    <div class="section-eyebrow">04 — Character Strategy</div>
+    <h2 class="section-title">キャラクター戦略</h2>
+  </div>
+  <div class="reveal">
+    <div class="char-options">
+      <div class="char-option recommended">
+        <div class="char-badge badge-rec">▶ 推奨 A</div>
+        <div class="char-title">メイン1体 + ジェネラティブ展開</div>
+        <div class="char-body">
+          サイバー坊主（BO-ボウ）を「原典」として本気で磨き込む。
+          その後、属性・装備・段位を変数にしてジェネラティブ展開。
+          参加者が「自分のサイバー坊主」を持てる体験が生まれる。後発でも入りやすい構造。
+        </div>
+      </div>
+      <div class="char-option">
+        <div class="char-badge badge-alt">選択肢 B</div>
+        <div class="char-title">初期5体の個性キャラ</div>
+        <div class="char-body">
+          CryptoNinja方式。それぞれ役割・属性が違う初期メンバーを揃える。
+          世界観の厚みは出るが、制作コストが高く、クオリティ維持が難しくなるリスクあり。
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="char-note">
+      <strong>現時点の方針：</strong>
+      ジュリアさんが磨いているサイバー坊主（BO-ボウ）を「完成形の原典」にする。
+      まず1体を本気で仕上げてから、展開戦略をコミュニティで決める。
+      追加キャラは「宗家・師範クラスの実績者」が提案できる仕組みにすると世界観との整合が保たれる。
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ACTION -->
+<section id="action">
+  <div class="reveal">
+    <div class="section-eyebrow">05 — Action Items</div>
+    <h2 class="section-title">アクションアイテム</h2>
+  </div>
+
+  <div class="reveal">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="prog" style="width:0%"></div>
+      <div class="progress-label" id="prog-label">0 / 9</div>
     </div>
   </div>
 
-  <div style="margin-top: 4px;">
-    <button onclick="sendPrompt('BushiDAOのキャラクター展開ロードマップを設計したい')">キャラロードマップを作る ↗</button>
+  <div class="reveal">
+    <div class="action-section">
+      <div class="action-section-label">制作・コンテンツ</div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">サイバー坊主（BO-ボウ）の完成版を制作</div>
+          <div class="action-sub">担当: ジュリアさん — 次回ブレスト前</div>
+        </div>
+      </div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">BushiDAO 創世記 ver.0.1 を Discord に固定投稿</div>
+          <div class="action-sub">担当: 運営 — #創世記・ルール チャンネルに貼る</div>
+        </div>
+      </div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">発信用記事の初稿を執筆（世界観 + DAOの存在意義）</div>
+          <div class="action-sub">担当: 文章得意なメンバー or 暗号太郎</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-section">
+      <div class="action-section-label">仕組み・設計</div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">功績ポイント基準表を作成（何をしたら何ポイントか）</div>
+          <div class="action-sub">担当: 設計担当 — スプレッドシートで管理開始</div>
+        </div>
+      </div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">段位ロール称号・特典の最終案をDiscordで議決</div>
+          <div class="action-sub">このページをブレスト議題として提示</div>
+        </div>
+      </div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">キャラ戦略（A案 or B案）をコミュニティ投票で決定</div>
+          <div class="action-sub">Discordの投票機能 or スレッドで合意形成</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-section">
+      <div class="action-section-label">人材・体制</div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">現メンバーのスキルを #自己紹介 で把握・整理</div>
+          <div class="action-sub">絵 / 文章 / エンジニア / SNS / Web3知識 をマッピング</div>
+        </div>
+      </div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">足りないスキルを特定 → 内部割り振り or 公募を判断</div>
+          <div class="action-sub">担当: アクション係 — 次回ブレストで発表</div>
+        </div>
+      </div>
+      <div class="action-item" onclick="tog(this)">
+        <div class="chk"></div>
+        <div>
+          <div class="action-main">「アクション係」を1名立てて報告フローを確立</div>
+          <div class="action-sub">進捗を週1でDiscordに投稿する担当者を決める</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<div class="panel" id="panel-action">
-  <div class="section-label">アクションアイテム — 今すぐ動けるもの</div>
-
-  <div class="progress-row">
-    <div class="prog-bar"><div class="prog-fill" id="ap" style="width:0%"></div></div>
-    <div class="prog-label" id="al">0 / 9</div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-kamon">
+    <svg width="48" height="48" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="45" cy="45" r="42" fill="none" stroke="#c8a84b" stroke-width="1"/>
+      <polygon points="45,10 52,30 75,30 58,44 64,68 45,54 26,68 32,44 15,30 38,30"
+               fill="none" stroke="#c8a84b" stroke-width="1.2"/>
+      <circle cx="45" cy="45" r="2.5" fill="#c8a84b"/>
+    </svg>
   </div>
-
-  <div style="margin-bottom: 10px;">
-    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;padding-left:2px">制作・コンテンツ</div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">サイバー坊主（BO-ボウ）の完成版を制作</div>
-      <div class="action-sub">担当: ジュリアさん　期限: 次回ブレスト前</div></div>
-    </div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">BushiDAO 創世記 ver.0.1 を Discord に固定投稿</div>
-      <div class="action-sub">担当: 運営　#創世記・ルール チャンネルに貼る</div></div>
-    </div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">発信用記事の初稿を執筆（世界観 + DAOの存在意義）</div>
-      <div class="action-sub">担当: 文章得意なメンバー or 暗号太郎</div></div>
-    </div>
-  </div>
-
-  <div style="margin-bottom: 10px;">
-    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;padding-left:2px">仕組み・設計</div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">功績ポイント基準表を作成（何をしたら何ポイントか）</div>
-      <div class="action-sub">担当: 設計担当　スプレッドシートで管理開始</div></div>
-    </div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">段位ロール称号・特典の最終案をDiscordで議決</div>
-      <div class="action-sub">このボードをブレスト議題として提示</div></div>
-    </div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">キャラ戦略（A案 or B案）をコミュニティ投票で決定</div>
-      <div class="action-sub">Discordの投票機能 or スレッドで合意形成</div></div>
-    </div>
-  </div>
-
-  <div style="margin-bottom: 10px;">
-    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;padding-left:2px">人材・体制</div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">現メンバーのスキルを #自己紹介 で把握・整理</div>
-      <div class="action-sub">絵 / 文章 / エンジニア / SNS / Web3知識 をマッピング</div></div>
-    </div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">足りないスキルを特定 → 内部割り振り or 公募を判断</div>
-      <div class="action-sub">担当: アクション係　次回ブレストで発表</div></div>
-    </div>
-    <div class="action-item" onclick="tog(this)">
-      <div class="chk"></div>
-      <div><div class="action-main">「アクション係」を1名立てて報告フローを確立</div>
-      <div class="action-sub">進捗を週1でDiscordに投稿する担当者を決める</div></div>
-    </div>
-  </div>
-
-  <div style="margin-top: 4px;">
-    <button onclick="sendPrompt('BushiDAOに今必要な人材とロール分担を詳しく整理したい')">人材マップを作る ↗</button>
-  </div>
-</div>
-
-</div>
+  <div class="footer-motto">道は続く、刀は眠らない</div>
+  <div class="footer-cc0">All characters CC0 — Free for all, including commercial use</div>
+</footer>
 
 <script>
-function sw(id) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
-  event.target.classList.add('active');
-}
 const total = 9;
 function tog(el) {
   el.classList.toggle('done');
   const c = el.querySelector('.chk');
   c.classList.toggle('on');
   c.textContent = c.classList.contains('on') ? '✓' : '';
-  const done = document.querySelectorAll('#panel-action .action-item.done').length;
-  document.getElementById('ap').style.width = Math.round(done / total * 100) + '%';
-  document.getElementById('al').textContent = done + ' / ' + total;
+  const done = document.querySelectorAll('.action-item.done').length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = done + ' / ' + total;
 }
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
+</body>
+</html>
